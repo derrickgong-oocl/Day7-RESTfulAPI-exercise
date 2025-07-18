@@ -88,7 +88,7 @@ paths:
       tags:
         - 图书管理
       security:
-        - basicAuth: []
+        - bearerToken: []
       requestBody:
         required: true
         content:
@@ -142,7 +142,7 @@ paths:
       tags:
         - 图书管理
       security:
-        - basicAuth: []
+        - bearerToken: []
       parameters:
         - in: path
           name: bookId
@@ -179,7 +179,7 @@ paths:
       tags:
         - 图书管理
       security:
-        - basicAuth: []
+        - bearerToken: []
       parameters:
         - in: path
           name: bookId
@@ -201,7 +201,7 @@ paths:
       tags:
         - 用户图书管理
       security:
-        - basicAuth: []
+        - bearerToken: []
       parameters:
         - in: path
           name: userId
@@ -269,7 +269,7 @@ paths:
       tags:
         - 用户图书管理
       security:
-        - basicAuth: []
+        - bearerToken: []
       parameters:
         - in: path
           name: userId
@@ -307,7 +307,7 @@ paths:
       tags:
         - 用户图书管理
       security:
-        - basicAuth: []
+        - bearerToken: []
       parameters:
         - in: path
           name: userId
@@ -386,7 +386,7 @@ paths:
         - 用户管理
       # 需要登录验证
       security:
-        - basicAuth: []
+        - bearerToken: []
       parameters:
         - in: path
           name: userId
@@ -435,7 +435,7 @@ components:
             $ref: "#/components/schemas/Error"
   # authorizations
   securitySchemes:
-    basicAuth: # <-- arbitrary name for the security scheme
+    bearerToken: # <-- Bearer token authentication
       type: http
       scheme: Bearer
 

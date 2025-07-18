@@ -62,9 +62,21 @@ node main.js
 
 ### 当前包含的接口
 
-1. **POST /accounts** - 账户相关操作
-2. **GET /books** - 获取图书列表
-3. **GET /users/{userId}** - 根据用户ID获取用户信息
+#### 用户管理
+1. **POST /users** - 用户注册
+2. **GET /users/{userId}** - 根据用户ID获取用户信息
+
+#### 图书管理
+3. **GET /books** - 获取图书列表（支持分页、搜索、筛选）
+4. **POST /books** - 创建新图书
+5. **GET /books/{bookId}** - 获取图书详情
+6. **PUT /books/{bookId}** - 更新图书信息
+7. **DELETE /books/{bookId}** - 删除图书
+
+#### 用户图书管理
+8. **GET /users/{userId}/books** - 获取用户的图书列表
+9. **POST /users/{userId}/books** - 为用户添加图书
+10. **DELETE /users/{userId}/books/{bookId}** - 移除用户的图书
 
 ### 环境配置
 
@@ -78,6 +90,24 @@ node main.js
 ### 认证方式
 
 项目使用 Bearer Token 认证方式，在 Swagger UI 界面中可以输入 Token 进行接口测试。
+
+### API 功能特性
+
+#### 图书管理功能
+- **完整的CRUD操作**: 支持图书的创建、读取、更新、删除
+- **分页查询**: 支持分页获取图书列表
+- **搜索筛选**: 支持按标题、作者、分类进行搜索
+- **状态管理**: 图书状态包括可用(available)、借出(borrowed)、预约(reserved)
+
+#### 用户图书管理功能
+- **个人书单**: 用户可以管理自己的图书收藏
+- **阅读状态**: 支持阅读中(reading)、已完成(completed)、愿望清单(wishlist)三种状态
+- **批量操作**: 支持为用户批量添加和移除图书
+
+#### 数据验证
+- **输入验证**: 所有接口都包含完整的参数验证
+- **格式检查**: ISBN、邮箱、手机号等字段包含格式验证
+- **长度限制**: 字符串字段包含合理的长度限制
 
 ## 🔧 开发指南
 

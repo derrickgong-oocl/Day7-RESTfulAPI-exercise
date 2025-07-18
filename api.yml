@@ -12,17 +12,262 @@ servers:
 paths:
   /books:
     get:
-      summary: 图书列表
-      description: Optional extended description in CommonMark or HTML.
+      summary: 获取图书列表
+      description: 分页获取所有图书信息
+      tags:
+        - 图书管理
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: 页码
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+          description: 每页数量
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: 图书标题搜索
+        - in: query
+          name: author
+          schema:
+            type: string
+          description: 作者搜索
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: 分类筛选
       responses:
         200:
-          description: 没问题
+          description: 获取成功
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
+                $ref: "#/components/schemas/BookListResponse"
+    post:
+      summary: 创建新图书
+      description: 添加一本新图书到系统
+      tags:
+        - 图书管理
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBookRequest"
+      responses:
+        201:
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+        400:
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /books/{bookId}:
+    get:
+      summary: 获取图书详情
+      description: 根据图书ID获取详细信息
+      tags:
+        - 图书管理
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+          required: true
+          description: 图书ID
+      responses:
+        200:
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+        404:
+          $ref: "#/components/responses/NotFound"
+    put:
+      summary: 更新图书信息
+      description: 修改图书的详细信息
+      tags:
+        - 图书管理
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+          required: true
+          description: 图书ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateBookRequest"
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookResponse"
+        400:
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
+    delete:
+      summary: 删除图书
+      description: 从系统中删除指定图书
+      tags:
+        - 图书管理
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+          required: true
+          description: 图书ID
+      responses:
+        204:
+          description: 删除成功
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
+  /users/{userId}/books:
+    get:
+      summary: 获取用户的图书
+      description: 获取指定用户拥有的图书列表
+      tags:
+        - 用户图书管理
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: 用户ID
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+          description: 页码
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+          description: 每页数量
+      responses:
+        200:
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserBookListResponse"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: 为用户添加图书
+      description: 将图书分配给指定用户
+      tags:
+        - 用户图书管理
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: 用户ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddUserBookRequest"
+      responses:
+        201:
+          description: 添加成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserBookResponse"
+        400:
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
+  /users/{userId}/books/{bookId}:
+    delete:
+      summary: 移除用户的图书
+      description: 从用户的书单中移除指定图书
+      tags:
+        - 用户图书管理
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: 用户ID
+        - in: path
+          name: bookId
+          schema:
+            type: integer
+          required: true
+          description: 图书ID
+      responses:
+        204:
+          description: 移除成功
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
   /users:
     post:
       summary: 用户注册
@@ -184,6 +429,315 @@ components:
               type: string
               format: date-time
               description: 创建时间
+      required:
+        - success
+        - message
+    Book:
+      type: object
+      properties:
+        bookId:
+          type: integer
+          description: 图书ID
+        title:
+          type: string
+          description: 图书标题
+        author:
+          type: string
+          description: 作者
+        isbn:
+          type: string
+          description: ISBN号
+        category:
+          type: string
+          description: 分类
+        description:
+          type: string
+          description: 图书描述
+        price:
+          type: number
+          format: float
+          description: 价格
+        publishDate:
+          type: string
+          format: date
+          description: 出版日期
+        publisher:
+          type: string
+          description: 出版社
+        pages:
+          type: integer
+          description: 页数
+        language:
+          type: string
+          description: 语言
+        coverImage:
+          type: string
+          description: 封面图片URL
+        status:
+          type: string
+          enum: [available, borrowed, reserved]
+          description: 图书状态
+        createdAt:
+          type: string
+          format: date-time
+          description: 创建时间
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新时间
+      required:
+        - bookId
+        - title
+        - author
+    CreateBookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: 图书标题
+        author:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: 作者
+        isbn:
+          type: string
+          pattern: '^[0-9-]{10,17}$'
+          description: ISBN号
+        category:
+          type: string
+          description: 分类
+        description:
+          type: string
+          maxLength: 1000
+          description: 图书描述
+        price:
+          type: number
+          minimum: 0
+          description: 价格
+        publishDate:
+          type: string
+          format: date
+          description: 出版日期
+        publisher:
+          type: string
+          description: 出版社
+        pages:
+          type: integer
+          minimum: 1
+          description: 页数
+        language:
+          type: string
+          description: 语言
+        coverImage:
+          type: string
+          format: uri
+          description: 封面图片URL
+      required:
+        - title
+        - author
+        - isbn
+    UpdateBookRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: 图书标题
+        author:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: 作者
+        isbn:
+          type: string
+          pattern: '^[0-9-]{10,17}$'
+          description: ISBN号
+        category:
+          type: string
+          description: 分类
+        description:
+          type: string
+          maxLength: 1000
+          description: 图书描述
+        price:
+          type: number
+          minimum: 0
+          description: 价格
+        publishDate:
+          type: string
+          format: date
+          description: 出版日期
+        publisher:
+          type: string
+          description: 出版社
+        pages:
+          type: integer
+          minimum: 1
+          description: 页数
+        language:
+          type: string
+          description: 语言
+        coverImage:
+          type: string
+          format: uri
+          description: 封面图片URL
+        status:
+          type: string
+          enum: [available, borrowed, reserved]
+          description: 图书状态
+    BookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 操作是否成功
+        message:
+          type: string
+          description: 响应消息
+        data:
+          $ref: "#/components/schemas/Book"
+      required:
+        - success
+        - message
+    BookListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 操作是否成功
+        message:
+          type: string
+          description: 响应消息
+        data:
+          type: object
+          properties:
+            books:
+              type: array
+              items:
+                $ref: "#/components/schemas/Book"
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  description: 当前页码
+                limit:
+                  type: integer
+                  description: 每页数量
+                total:
+                  type: integer
+                  description: 总记录数
+                totalPages:
+                  type: integer
+                  description: 总页数
+              required:
+                - page
+                - limit
+                - total
+                - totalPages
+          required:
+            - books
+            - pagination
+      required:
+        - success
+        - message
+    UserBook:
+      type: object
+      properties:
+        userBookId:
+          type: integer
+          description: 用户图书关系ID
+        userId:
+          type: integer
+          description: 用户ID
+        bookId:
+          type: integer
+          description: 图书ID
+        book:
+          $ref: "#/components/schemas/Book"
+          description: 图书信息
+        addedAt:
+          type: string
+          format: date-time
+          description: 添加时间
+        status:
+          type: string
+          enum: [reading, completed, wishlist]
+          description: 阅读状态
+      required:
+        - userBookId
+        - userId
+        - bookId
+    AddUserBookRequest:
+      type: object
+      properties:
+        bookId:
+          type: integer
+          description: 图书ID
+        status:
+          type: string
+          enum: [reading, completed, wishlist]
+          default: wishlist
+          description: 阅读状态
+      required:
+        - bookId
+    UserBookResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 操作是否成功
+        message:
+          type: string
+          description: 响应消息
+        data:
+          $ref: "#/components/schemas/UserBook"
+      required:
+        - success
+        - message
+    UserBookListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 操作是否成功
+        message:
+          type: string
+          description: 响应消息
+        data:
+          type: object
+          properties:
+            userBooks:
+              type: array
+              items:
+                $ref: "#/components/schemas/UserBook"
+            pagination:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  description: 当前页码
+                limit:
+                  type: integer
+                  description: 每页数量
+                total:
+                  type: integer
+                  description: 总记录数
+                totalPages:
+                  type: integer
+                  description: 总页数
+              required:
+                - page
+                - limit
+                - total
+                - totalPages
+          required:
+            - userBooks
+            - pagination
       required:
         - success
         - message

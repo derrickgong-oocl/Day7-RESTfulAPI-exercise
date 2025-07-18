@@ -10,11 +10,6 @@ servers:
   - url: https://uat.server.test/v1
   - url: https://prod.server.test/v1
 paths:
-  /accounts:
-    post:
-      responses:
-        '200':
-          description: OK
   /books:
     get:
       summary: 图书列表
@@ -28,10 +23,44 @@ paths:
                 type: array
                 items:
                   type: string
+  /users:
+    post:
+      summary: 用户注册
+      description: 创建新用户账户
+      tags:
+        - 用户管理
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        201:
+          description: 用户注册成功
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        400:
+          description: 请求参数错误
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        409:
+          description: 用户名已存在
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
   /users/{userId}:
     # 获取用户信息
     get:
       summary: Get a user by ID
+      tags:
+        - 用户管理
+      # 需要登录验证
       security:
         - basicAuth: []
       parameters:
@@ -95,3 +124,66 @@ components:
           type: string
           format: byte
           description: Base64-encoded contents of the avatar image
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          pattern: '^[a-zA-Z0-9_]+$'
+          description: 用户名，只能包含字母、数字和下划线
+        email:
+          type: string
+          format: email
+          description: 用户邮箱
+        password:
+          type: string
+          minLength: 6
+          maxLength: 50
+          description: 用户密码
+        confirmPassword:
+          type: string
+          description: 确认密码
+        age:
+          type: integer
+          minimum: 1
+          maximum: 120
+          description: 用户年龄
+        phone:
+          type: string
+          pattern: '^1[3-9]\\d{9}$'
+          description: 手机号码（可选）
+      required:
+        - username
+        - email
+        - password
+        - confirmPassword
+    RegisterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 注册是否成功
+        message:
+          type: string
+          description: 响应消息
+        data:
+          type: object
+          properties:
+            userId:
+              type: integer
+              description: 新创建的用户ID
+            username:
+              type: string
+              description: 用户名
+            email:
+              type: string
+              description: 邮箱
+            createdAt:
+              type: string
+              format: date-time
+              description: 创建时间
+      required:
+        - success
+        - message

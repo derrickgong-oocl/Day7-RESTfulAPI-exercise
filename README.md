@@ -9,6 +9,8 @@
 - 🔧 支持多环境服务器配置（开发、测试、UAT、生产）
 - 🔐 支持 Bearer Token 认证
 - 📝 完整的 API 接口定义和响应示例
+- 🎭 **API Mock 服务器**: 基于 OpenAPI 规范提供真实的 Mock 响应
+- 🧪 **双服务器模式**: 支持文档展示和 API 测试两种模式
 
 ## 📋 项目结构
 
@@ -27,6 +29,7 @@ restful-demo/
 - **Express.js** - Web 应用框架
 - **swagger-ui-express** - Swagger UI 集成中间件
 - **yaml** - YAML 文件解析器
+- **@stoplight/prism-cli** - API Mock 服务器
 
 ## 📦 安装和运行
 
@@ -43,20 +46,30 @@ npm install
 
 ### 启动服务
 
+#### 启动 Swagger UI 文档服务器
 ```bash
 npm start
 ```
 
 或者直接运行：
-
 ```bash
 node main.js
 ```
 
+#### 启动 API Mock 服务器
+```bash
+npm run mock
+```
+
 ### 访问地址
 
+#### Swagger UI 文档服务器
 - **服务器地址**: http://localhost:3000
 - **API 文档**: http://localhost:3000/api-docs
+
+#### API Mock 服务器
+- **Mock 服务器**: http://127.0.0.1:3001
+- **支持真实的 API 调用和响应模拟**
 
 ## 📚 API 文档说明
 
@@ -82,7 +95,7 @@ node main.js
 
 项目支持多环境配置：
 
-- **开发环境**: https://dev.server.test/v1
+- **开发环境**: http://127.0.0.1:3001/ (Mock 服务器)
 - **测试环境**: https://test.server.test/v1
 - **UAT环境**: https://uat.server.test/v1
 - **生产环境**: https://prod.server.test/v1
@@ -141,6 +154,12 @@ paths:
 
 - **swagger-ui-express**: 提供 Swagger UI 的 Express 中间件
 - **yaml**: 用于解析 YAML 格式的 OpenAPI 规范文件
+- **@stoplight/prism-cli**: 提供 API Mock 功能，可以基于 OpenAPI 规范生成真实的 Mock 响应
+
+## 🎯 项目脚本
+
+- **npm start**: 启动 Swagger UI 文档服务器（端口 3000）
+- **npm run mock**: 启动 API Mock 服务器（端口 3001），支持真实的 API 调用测试
 
 
 
@@ -158,6 +177,14 @@ A: 在 `api.yml` 文件的 `components/schemas` 部分添加新的模型定义�
 
 ### Q: 如何启用 CORS？
 A: 安装 `cors` 包并在 `main.js` 中添加相应的中间件配置。
+
+### Q: 如何使用 Mock 服务器进行 API 测试？
+A: 运行 `npm run mock` 启动 Mock 服务器，然后可以使用 Postman 或其他工具调用 http://127.0.0.1:3001 上的 API 接口进行测试。
+
+### Q: Mock 服务器和文档服务器有什么区别？
+A: 
+- **文档服务器** (npm start): 提供 Swagger UI 界面，用于查看和测试 API 文档
+- **Mock 服务器** (npm run mock): 提供真实的 API 响应模拟，可以用于前端开发和集成测试
 
 ## 📞 联系方式
 

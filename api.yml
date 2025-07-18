@@ -3,7 +3,7 @@ info:
   title: XXX 项目 API
   version: '1.0'
 servers:
-  - url: https://dev.server.test/v1
+  - url: http://127.0.0.1:3001/
     description: 开发环境
   - url: https://test.server.test/v1
     description: 测试环境

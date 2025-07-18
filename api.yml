@@ -1,0 +1,97 @@
+openapi: '3.0.3'
+info:
+  title: XXX 项目 API
+  version: '1.0'
+servers:
+  - url: https://dev.server.test/v1
+    description: 开发环境
+  - url: https://test.server.test/v1
+    description: 测试环境
+  - url: https://uat.server.test/v1
+  - url: https://prod.server.test/v1
+paths:
+  /accounts:
+    post:
+      responses:
+        '200':
+          description: OK
+  /books:
+    get:
+      summary: 图书列表
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        200:
+          description: 没问题
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /users/{userId}:
+    # 获取用户信息
+    get:
+      summary: Get a user by ID
+      security:
+        - basicAuth: []
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the user to get
+      responses:
+        200:
+          description: 没问题
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+# Descriptions of common components
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  # authorizations
+  securitySchemes:
+    basicAuth: # <-- arbitrary name for the security scheme
+      type: http
+      scheme: Bearer
+
+  schemas:
+    # Schema for error response body
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+    User:
+      type: object
+      properties:
+        userId: 
+          type: number
+        username:
+          type: string
+        age:
+          type: integer
+        avatar: # <-- image embedded into JSON
+          type: string
+          format: byte
+          description: Base64-encoded contents of the avatar image

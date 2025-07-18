@@ -1,0 +1,16 @@
+{
+  "name": "restful-demo",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.8.0"
+  }
+}

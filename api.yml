@@ -53,7 +53,35 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookListResponse"
+                type: object
+                properties:
+                  books:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Book"
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        description: 当前页码
+                      limit:
+                        type: integer
+                        description: 每页数量
+                      total:
+                        type: integer
+                        description: 总记录数
+                      totalPages:
+                        type: integer
+                        description: 总页数
+                    required:
+                      - page
+                      - limit
+                      - total
+                      - totalPages
+                required:
+                  - books
+                  - pagination
     post:
       summary: 创建新图书
       description: 添加一本新图书到系统
@@ -73,7 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookResponse"
+                $ref: "#/components/schemas/Book"
         400:
           description: 请求参数错误
           content:
@@ -82,6 +110,10 @@ paths:
                 $ref: "#/components/schemas/Error"
         401:
           $ref: "#/components/responses/Unauthorized"
+        422:
+          $ref: "#/components/responses/UnprocessableEntity"
+        500:
+          $ref: "#/components/responses/InternalServerError"
   /books/{bookId}:
     get:
       summary: 获取图书详情
@@ -101,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookResponse"
+                $ref: "#/components/schemas/Book"
         404:
           $ref: "#/components/responses/NotFound"
     put:
@@ -130,7 +162,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BookResponse"
+                $ref: "#/components/schemas/Book"
         400:
           description: 请求参数错误
           content:
@@ -198,7 +230,35 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserBookListResponse"
+                type: object
+                properties:
+                  userBooks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserBook"
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        description: 当前页码
+                      limit:
+                        type: integer
+                        description: 每页数量
+                      total:
+                        type: integer
+                        description: 总记录数
+                      totalPages:
+                        type: integer
+                        description: 总页数
+                    required:
+                      - page
+                      - limit
+                      - total
+                      - totalPages
+                required:
+                  - userBooks
+                  - pagination
         401:
           $ref: "#/components/responses/Unauthorized"
         404:
@@ -229,7 +289,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserBookResponse"
+                $ref: "#/components/schemas/UserBook"
         400:
           description: 请求参数错误
           content:
@@ -286,7 +346,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RegisterResponse"
+                type: object
+                properties:
+                  userId:
+                    type: integer
+                    description: 新创建的用户ID
+                  username:
+                    type: string
+                    description: 用户名
+                  email:
+                    type: string
+                    description: 邮箱
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: 创建时间
+                required:
+                  - userId
+                  - username
+                  - email
+                  - createdAt
         400:
           description: 请求参数错误
           content:
@@ -317,11 +396,15 @@ paths:
           description: Numeric ID of the user to get
       responses:
         200:
-          description: 没问题
+          description: 获取成功
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        404:
+          $ref: "#/components/responses/NotFound"
 
 # Descriptions of common components
 components:
@@ -334,6 +417,18 @@ components:
             $ref: "#/components/schemas/Error"
     Unauthorized:
       description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    UnprocessableEntity:
+      description: Request format is correct but semantic errors exist
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
@@ -369,6 +464,7 @@ components:
           type: string
           format: byte
           description: Base64-encoded contents of the avatar image
+
     RegisterRequest:
       type: object
       properties:
@@ -404,34 +500,7 @@ components:
         - email
         - password
         - confirmPassword
-    RegisterResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 注册是否成功
-        message:
-          type: string
-          description: 响应消息
-        data:
-          type: object
-          properties:
-            userId:
-              type: integer
-              description: 新创建的用户ID
-            username:
-              type: string
-              description: 用户名
-            email:
-              type: string
-              description: 邮箱
-            createdAt:
-              type: string
-              format: date-time
-              description: 创建时间
-      required:
-        - success
-        - message
+
     Book:
       type: object
       properties:
@@ -589,62 +658,8 @@ components:
           type: string
           enum: [available, borrowed, reserved]
           description: 图书状态
-    BookResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 操作是否成功
-        message:
-          type: string
-          description: 响应消息
-        data:
-          $ref: "#/components/schemas/Book"
-      required:
-        - success
-        - message
-    BookListResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 操作是否成功
-        message:
-          type: string
-          description: 响应消息
-        data:
-          type: object
-          properties:
-            books:
-              type: array
-              items:
-                $ref: "#/components/schemas/Book"
-            pagination:
-              type: object
-              properties:
-                page:
-                  type: integer
-                  description: 当前页码
-                limit:
-                  type: integer
-                  description: 每页数量
-                total:
-                  type: integer
-                  description: 总记录数
-                totalPages:
-                  type: integer
-                  description: 总页数
-              required:
-                - page
-                - limit
-                - total
-                - totalPages
-          required:
-            - books
-            - pagination
-      required:
-        - success
-        - message
+
+
     UserBook:
       type: object
       properties:
@@ -685,59 +700,4 @@ components:
           description: 阅读状态
       required:
         - bookId
-    UserBookResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 操作是否成功
-        message:
-          type: string
-          description: 响应消息
-        data:
-          $ref: "#/components/schemas/UserBook"
-      required:
-        - success
-        - message
-    UserBookListResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 操作是否成功
-        message:
-          type: string
-          description: 响应消息
-        data:
-          type: object
-          properties:
-            userBooks:
-              type: array
-              items:
-                $ref: "#/components/schemas/UserBook"
-            pagination:
-              type: object
-              properties:
-                page:
-                  type: integer
-                  description: 当前页码
-                limit:
-                  type: integer
-                  description: 每页数量
-                total:
-                  type: integer
-                  description: 总记录数
-                totalPages:
-                  type: integer
-                  description: 总页数
-              required:
-                - page
-                - limit
-                - total
-                - totalPages
-          required:
-            - userBooks
-            - pagination
-      required:
-        - success
-        - message
+

@@ -186,6 +186,160 @@ A:
 - **文档服务器** (npm start): 提供 Swagger UI 界面，用于查看和测试 API 文档
 - **Mock 服务器** (npm run mock): 提供真实的 API 响应模拟，可以用于前端开发和集成测试
 
+## 🎓 API 练习题目
+
+以下是为学员设计的API练习题目，涵盖了不同的RESTful设计模式和业务场景。学员需要基于OpenAPI 3.0规范设计并实现这些API。
+
+### 📚 练习题目列表
+
+#### 1. 订单管理系统 API
+**业务场景**: 设计一个电商订单管理系统，支持订单的创建、查询、状态更新等操作。
+
+**要求实现的接口**:
+- `GET /orders` - 获取订单列表（支持分页、状态筛选、时间范围查询）
+- `POST /orders` - 创建新订单
+- `GET /orders/{orderId}` - 获取订单详情
+- `PUT /orders/{orderId}` - 更新订单信息
+- `DELETE /orders/{orderId}` - 取消订单
+- `PATCH /orders/{orderId}/status` - 更新订单状态
+- `GET /orders/{orderId}/items` - 获取订单商品列表
+
+**数据模型要求**:
+- Order: 包含订单ID、用户ID、订单状态、总金额、创建时间等
+- OrderItem: 包含商品ID、数量、单价、小计等
+- OrderStatus: 枚举值（pending, confirmed, shipped, delivered, cancelled）
+
+**练习要点**:
+- 状态机设计（订单状态流转）
+- 嵌套资源设计（订单商品）
+- 部分更新操作（PATCH方法）
+- 复杂查询参数设计
+
+#### 2. 产品目录 API
+**业务场景**: 设计一个产品目录管理系统，支持产品分类、属性、库存等管理。
+
+**要求实现的接口**:
+- `GET /categories` - 获取产品分类列表
+- `POST /categories` - 创建产品分类
+- `GET /categories/{categoryId}/products` - 获取分类下的产品
+- `GET /products` - 获取产品列表（支持分类筛选、价格范围、关键词搜索）
+- `POST /products` - 创建新产品
+- `GET /products/{productId}` - 获取产品详情
+- `PUT /products/{productId}` - 更新产品信息
+- `DELETE /products/{productId}` - 删除产品
+
+**数据模型要求**:
+- Category: 包含分类ID、名称、描述、父分类ID等
+- Product: 包含产品ID、名称、描述、价格、库存、分类ID等
+- ProductVariant: 包含变体ID、产品ID、规格、价格、库存等
+
+**练习要点**:
+- 层级结构设计（分类树）
+- 关联资源查询
+- 复杂搜索和筛选
+- 产品变体管理
+
+#### 3. 评论系统 API
+**业务场景**: 设计一个评论系统，支持用户对产品、文章等进行评论和评分。
+
+**要求实现的接口**:
+- `GET /reviews` - 获取评论列表（支持分页、评分筛选、时间排序）
+- `POST /reviews` - 创建新评论
+- `GET /reviews/{reviewId}` - 获取评论详情
+- `PUT /reviews/{reviewId}` - 更新评论
+- `DELETE /reviews/{reviewId}` - 删除评论
+- `POST /reviews/{reviewId}/likes` - 点赞评论
+- `DELETE /reviews/{reviewId}/likes` - 取消点赞
+- `GET /reviews/{reviewId}/replies` - 获取评论回复
+- `POST /reviews/{reviewId}/replies` - 回复评论
+
+**数据模型要求**:
+- Review: 包含评论ID、用户ID、目标类型、目标ID、内容、评分、创建时间等
+- ReviewLike: 包含点赞ID、评论ID、用户ID、创建时间等
+- ReviewReply: 包含回复ID、评论ID、用户ID、内容、创建时间等
+
+**练习要点**:
+- 多态关联设计（评论可以针对不同类型的目标）
+- 嵌套评论设计（回复功能）
+- 点赞功能设计
+- 评分统计和排序
+
+
+
+#### 4. 通知系统 API
+**业务场景**: 设计一个通知系统，支持系统通知、用户消息、推送通知等。
+
+**要求实现的接口**:
+- `GET /notifications` - 获取通知列表（支持分页、类型筛选、已读状态）
+- `POST /notifications` - 创建系统通知
+- `GET /notifications/{notificationId}` - 获取通知详情
+- `PUT /notifications/{notificationId}/read` - 标记通知为已读
+- `DELETE /notifications/{notificationId}` - 删除通知
+- `PUT /notifications/read-all` - 标记所有通知为已读
+- `GET /notifications/unread-count` - 获取未读通知数量
+- `POST /notifications/broadcast` - 发送广播通知
+
+**数据模型要求**:
+- Notification: 包含通知ID、用户ID、类型、标题、内容、已读状态、创建时间等
+- NotificationType: 枚举值（system, user, order, promotion等）
+
+**练习要点**:
+- 批量操作设计
+- 统计查询设计
+- 广播功能设计
+- 状态管理设计
+
+### 🎯 练习要求
+
+#### 基础要求
+1. **遵循RESTful设计原则**
+   - 使用合适的HTTP方法
+   - 设计合理的URL结构
+   - 返回正确的HTTP状态码
+
+2. **完整的OpenAPI 3.0规范**
+   - 定义完整的请求/响应模型
+   - 包含参数验证规则
+   - 提供响应示例
+
+3. **错误处理设计**
+   - 定义统一的错误响应格式
+   - 包含适当的错误状态码
+   - 提供详细的错误信息
+
+#### 进阶要求
+1. **查询优化**
+   - 支持分页查询
+   - 实现搜索和筛选功能
+   - 支持排序操作
+
+2. **关联关系设计**
+   - 设计合理的资源关联
+   - 支持嵌套资源查询
+   - 实现关联数据的CRUD操作
+
+3. **业务逻辑设计**
+   - 实现状态机逻辑
+   - 设计数据验证规则
+   - 考虑并发和一致性
+
+### 📝 练习提交
+
+学员需要提交以下内容：
+1. **OpenAPI 3.0规范文档** (YAML格式)
+2. **API设计说明文档** (包含设计思路、业务逻辑说明)
+3. **测试用例** (包含主要场景的测试数据)
+
+### 🏆 评分标准
+
+- **设计规范性** (30%): RESTful设计原则的遵循程度
+- **功能完整性** (25%): 接口功能的完整性和合理性
+- **数据模型设计** (20%): 数据结构的合理性和扩展性
+- **错误处理** (15%): 错误处理机制的完善程度
+- **文档质量** (10%): 文档的清晰度和完整性
+
+---
+
 ## 📞 联系方式
 
 如有问题或建议，请通过以下方式联系：

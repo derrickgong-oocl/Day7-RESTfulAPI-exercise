@@ -152,6 +152,8 @@ paths:
 
 ## 📝 依赖说明
 
+项目依赖如下（详见 package.json）：
+
 - **swagger-ui-express**: 提供 Swagger UI 的 Express 中间件
 - **yaml**: 用于解析 YAML 格式的 OpenAPI 规范文件
 - **@stoplight/prism-cli**: 提供 API Mock 功能，可以基于 OpenAPI 规范生成真实的 Mock 响应
@@ -160,8 +162,12 @@ paths:
 
 - **npm start**: 启动 Swagger UI 文档服务器（端口 3000）
 - **npm run mock**: 启动 API Mock 服务器（端口 3001），支持真实的 API 调用测试
+- **npm test**: 运行 API 测试（需配置 test 目录下的 YAML 测试集合，依赖 inso 工具）
 
-
+> test 脚本说明：
+> - 该脚本会运行 `inso run collection -w ./test/*.yaml -e '<collection name>' wrk_scratc`
+> - 请确保已安装 [Insomnia/Inso CLI](https://docs.insomnia.rest/inso-cli/introduction) 并在 test 目录下准备好测试用例 YAML 文件。
+> - Inso CLI 安装方法，详情见官方文档。
 
 ## 📄 许可证
 
@@ -263,8 +269,6 @@ A:
 - 嵌套评论设计（回复功能）
 - 点赞功能设计
 - 评分统计和排序
-
-
 
 #### 4. 通知系统 API
 **业务场景**: 设计一个通知系统，支持系统通知、用户消息、推送通知等。

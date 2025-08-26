@@ -1,0 +1,415 @@
+openapi: '3.0.3'
+info:
+  title: XXX 项目 API
+  version: '1.0'
+servers:
+  - url: http://127.0.0.1:3001/
+    description: 开发环境
+  - url: https://test.server.test/v1
+    description: 测试环境
+  - url: https://uat.server.test/v1
+  - url: https://prod.server.test/v1
+paths:
+  /company:
+    get:
+      summary: 获取公司详情
+      tags:
+        - 公司管理
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 获取所有公司
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The company ID.
+                    name:
+                      type: string
+                      description: The company name.
+                    
+              examples:
+                example1:
+                  value:
+                    id: 1
+                    name: "Company A"
+                example2:
+                  value:
+                    id: 2
+                    name: "Company B"
+    post:
+      summary: 创建新的公司
+      tags:
+        - 公司管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The company name.
+      responses:
+        201:
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The company ID.
+                  name:
+                    type: string
+                    description: The company name.
+              examples:
+                example1:
+                  value:
+                    id: 1
+                    name: "Company A"
+                example2:
+                  value:
+                    id: 2
+                    name: "Company B"
+        404:
+          description: 创建失败
+    
+    put:
+      summary: 更新公司信息
+      tags:
+        - 公司管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: The company ID.
+                name:
+                  type: string
+                  description: The company name.
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The company ID.
+                  name:
+                    type: string
+                    description: The company name.
+              examples:
+                example1:
+                  value:
+                    id: 1
+                    name: "Company A"
+                example2:
+                  value:
+                    id: 2
+                    name: "Company B"
+    delete:
+      summary: 删除公司
+      tags:
+        - 公司管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      responses:
+        204:
+          description: 删除成功
+
+    patch:
+      summary: 部分更新公司信息
+      tags:
+        - 公司管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: The company ID.
+                name:
+                  type: string
+                  description: The company name.
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The company ID.
+                  name:
+                    type: string
+                    description: The company name.
+              examples:
+                example1:
+                  value:
+                    id: 1
+                    name: "Company A"
+                example2:
+                  value:
+                    id: 2
+                    name: "Company B"
+
+  /employee/{id}:
+    get:
+      summary: 获取员工详情
+      tags:
+        - 人员管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      responses:
+        200:
+          description: 获取员工详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+              examples:
+                example1:
+                  value:
+                    id: 1
+                    name: "Alice"
+                example2:
+                  value:
+                    id: 2
+                    name: "Bob"
+                
+
+    put:
+      summary: 更新员工信息
+      tags:
+        - 人员管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+
+    patch:
+      summary: 部分更新员工信息
+      tags:
+        - 人员管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+
+    delete:
+      summary: 删除员工
+      tags:
+        - 人员管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      responses:
+        204:
+          description: 删除成功
+    
+    post:
+      summary: 创建新的员工
+      tags:
+        - 人员管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestEmployee'
+      responses:
+        201:
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        404:
+          description: 创建失败
+
+  /employees:
+    get:
+      summary: 获取员工列表
+      tags:
+        - 公司人员管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 获取员工列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  employees:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
+                  pagination:
+                    type: object
+                    $ref: '#/components/schemas/Pagination'
+  
+  /companys:
+    get:
+      summary: 获取公司列表
+      tags:
+        - 公司列表管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 获取公司列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  companys:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Company'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purpose
+  schemas:
+    Pagination: 
+      type: object
+      properties: 
+        total:  
+          type: integer
+          description: 总条数
+        page: 
+          type: integer
+          description: 当前页码
+        limit: 
+          type: integer
+          description: 每页条数
+        totalPages: 
+          type: integer
+          description: 总页数
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The employee ID.
+        name:
+          type: string
+          description: The employee name.
+        position:
+          type: string
+          description: The employee position.
+        department:
+          type: string
+          description: The employee department.
+    EmployeeList:
+      type: object
+      properties:
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    RequestEmployee:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The employee name.
+        position:
+          type: string
+          description: The employee position.
+        department:
+          type: string
+          description: The employee department.
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The company ID.
+        name:
+          type: string
+          description: The company name.
+        location:
+          type: string
+          description: The company location.
+        industry:
+          type: string
+          description: The company industry.

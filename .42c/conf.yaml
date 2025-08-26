@@ -1,3 +1,5 @@
 apis:
   api.yml:
     alias: xxx-api
+  hr_api.yml:
+    alias: xxx-api1

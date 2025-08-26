@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node main.js",
     "test": "inso run collection -w ./test/*.yaml -e 'books lib' wrk_scratc",
-    "mock": "prism mock api.yml --port 3001"
+    "mock": "prism mock hr_api.yml --port 3001"
   },
   "keywords": [],
   "author": "",

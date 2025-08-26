@@ -18,3 +18,184 @@ paths:
       responses:
         200:
           description: Get all books
+  
+  /todos/{id}:
+    get:
+      summary: 获取待办事项详情
+      tags:
+        - 待办事项管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      responses:
+        200:
+          description: 获取todo详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+              examples: 
+                example1: 
+                  value: 
+                    id: 1
+                    title: "Todo 1"
+                    status: "done"
+
+    put:
+      summary: 更新待办事项
+      tags:
+        - 待办事项管理
+      security:
+       - bearerAuth: [] # use the same name as above
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTodo'
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+
+    patch:
+      summary: 部分更新待办事项
+      tags:
+        - 待办事项管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoStatus'
+      responses:
+        200:
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+
+    delete:
+      summary: 删除待办事项
+      tags:
+        - 待办事项管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      responses:
+        204:
+          description: 删除成功
+
+  /todos:
+    get:
+      summary: 获取所有todos
+      tags:
+        - todo list
+      security:
+       - bearerAuth: [] # use the same name as above
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: status
+          schema:
+            type: string
+            $ref: '#/components/schemas/TodoStatus'
+          description: 待办事项状态
+
+      responses:
+        200:
+          description: 获取所有todos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  todos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Todo'
+                  pagination:
+                    type: object
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: 创建新的待办事项
+      tags:
+        - 待办事项管理
+      security:
+       - bearerAuth: [] # use the same name as above
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTodo'
+      responses:
+        201:
+          description: 创建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        404:
+          description: 创建失败
+          
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purpose
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The todo ID.
+        title:
+          type: string
+          description: The todo title.
+        status:
+          type: string
+          description: The todo status.
+    RequestTodo:
+      properties:
+        title:
+          type: string
+          description: The todo title.
+    TodoStatus:
+      type: string
+      enum: 
+        - todo
+        - doing
+        - done  
+    Pagination: 
+      type: object
+      properties: 
+        total:  
+          type: integer
+          description: 总条数
+        page: 
+          type: integer
+          description: 当前页码
+        limit: 
+          type: integer
+          description: 每页条数
+        totalPages: 
+          type: integer
+          description: 总页数
+  

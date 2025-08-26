@@ -10,7 +10,7 @@ servers:
   - url: https://uat.server.test/v1
   - url: https://prod.server.test/v1
 paths:
-  /company:
+  /company/{id}:
     get:
       summary: 获取公司详情
       tags:
@@ -19,7 +19,7 @@ paths:
         - bearerAuth: []
       responses:
         200:
-          description: 获取所有公司
+          description: 获取公司详情
           content:
             application/json:
               schema:
@@ -33,16 +33,17 @@ paths:
                     name:
                       type: string
                       description: The company name.
+                    employees:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Employee'
                     
               examples:
                 example1:
                   value:
                     id: 1
                     name: "Company A"
-                example2:
-                  value:
-                    id: 2
-                    name: "Company B"
+                    employees: []
     post:
       summary: 创建新的公司
       tags:
@@ -73,15 +74,16 @@ paths:
                   name:
                     type: string
                     description: The company name.
+                  employees:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
               examples:
                 example1:
                   value:
                     id: 1
                     name: "Company A"
-                example2:
-                  value:
-                    id: 2
-                    name: "Company B"
+                    employees: []
         404:
           description: 创建失败
     
@@ -104,6 +106,10 @@ paths:
                 name:
                   type: string
                   description: The company name.
+                employees:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Employee'
       responses:
         200:
           description: 更新成功
@@ -118,15 +124,16 @@ paths:
                   name:
                     type: string
                     description: The company name.
+                  employees:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
               examples:
                 example1:
                   value:
                     id: 1
                     name: "Company A"
-                example2:
-                  value:
-                    id: 2
-                    name: "Company B"
+                    employees: []
     delete:
       summary: 删除公司
       tags:
@@ -156,6 +163,10 @@ paths:
                 name:
                   type: string
                   description: The company name.
+                employees:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Employee'
       responses:
         200:
           description: 更新成功
@@ -170,15 +181,16 @@ paths:
                   name:
                     type: string
                     description: The company name.
+                  employees:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Employee'
               examples:
                 example1:
                   value:
                     id: 1
                     name: "Company A"
-                example2:
-                  value:
-                    id: 2
-                    name: "Company B"
+                    employees: []
 
   /employee/{id}:
     get:
@@ -199,10 +211,9 @@ paths:
                   value:
                     id: 1
                     name: "Alice"
-                example2:
-                  value:
-                    id: 2
-                    name: "Bob"
+                    age: 20
+                    gender: "Female"
+                    salary: 8000
                 
 
     put:
@@ -309,7 +320,7 @@ paths:
                     type: object
                     $ref: '#/components/schemas/Pagination'
   
-  /companys:
+  /companies:
     get:
       summary: 获取公司列表
       tags:
@@ -333,7 +344,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  companys:
+                  companies:
                     type: array
                     items:
                       $ref: '#/components/schemas/Company'
@@ -371,12 +382,15 @@ components:
         name:
           type: string
           description: The employee name.
-        position:
+        age:
+          type: integer
+          description: The employee age.
+        gender:
           type: string
-          description: The employee position.
-        department:
-          type: string
-          description: The employee department.
+          description: The employee gender.
+        salary:
+          type: integer
+          description: The employee salary.
     EmployeeList:
       type: object
       properties:
@@ -389,15 +403,22 @@ components:
     RequestEmployee:
       type: object
       properties:
+        id:
+          type: integer
+          description: The employee ID.
         name:
           type: string
           description: The employee name.
-        position:
+        age:
+          type: integer
+          description: The employee age.
+        gender:
           type: string
-          description: The employee position.
-        department:
-          type: string
-          description: The employee department.
+          description: The employee gender.
+        salary:
+          type: integer
+          description: The employee salary.
+        
     Company:
       type: object
       properties:
@@ -407,9 +428,7 @@ components:
         name:
           type: string
           description: The company name.
-        location:
-          type: string
-          description: The company location.
-        industry:
-          type: string
-          description: The company industry.
+        employees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'

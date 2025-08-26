@@ -151,6 +151,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Todo'
+              examples: 
+                example1: 
+                  value: 
+                    id: 1
+                    title: "Todo 1"
+                    status: "done"
         404:
           description: 创建失败
           

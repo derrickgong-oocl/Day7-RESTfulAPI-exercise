@@ -5,7 +5,7 @@ const fs = require("fs");
 const YAML = require('yaml');
 
 // api.yaml
-const file  = fs.readFileSync('./api.yml', 'utf8');
+const file  = fs.readFileSync('./hr_api.yml', 'utf8');
 const swaggerDocument = YAML.parse(file);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

@@ -1,0 +1,185 @@
+type: collection.insomnia.rest/5.0
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1756113830717
+  modified: 1756113830717
+  description: ""
+collection:
+  - name: Todo list
+    meta:
+      id: fld_29ecf358260e4c3eb9e13d83e0ddb1e9
+      created: 1756197369708
+      modified: 1756199439895
+      sortKey: -1756197369708
+      description: ""
+    children:
+      - name: 获取详情case
+        meta:
+          id: fld_e3d2515f2f6844288ec9ffd21ca8ff98
+          created: 1756197431830
+          modified: 1756199439895
+          sortKey: -1756197375193
+          description: ""
+        children:
+          - url: "{{ _.base_url }}/todos/1"
+            name: 获取待办事项详情
+            meta:
+              id: req_8304f45ae8dc42ce925b34bb10940e0d
+              created: 1756196696794
+              modified: 1756199417902
+              isPrivate: false
+              description: ""
+              sortKey: -1756197463260
+            method: GET
+            authentication:
+              type: bearer
+              token: "1234"
+              prefix: Bearer
+            scripts:
+              preRequest: ""
+              afterResponse: |
+                insomnia.test('Check if status is 200', () => {
+                    insomnia.expect(insomnia.response.code).to.eql(200);
+                });
+
+                insomnia.test('验证ID是否一致', () => {
+                		
+                		const myFolder = insomnia.parentFolders.get('获取详情case');
+                		if (myFolder == undefined) {
+                			throw Error('myFolder not found');
+                		}
+                		const todoID = myFolder.environment.get('todoId');
+                		console.log(todoID);
+                		const todoDetail = insomnia.response.json();
+                	
+                    insomnia.expect(todoID).to.eql(todoDetail.id);
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.base_url }}/todos"
+            name: 创建新的待办事项
+            meta:
+              id: req_e558d89e3e3c421591eaf5485cea595b
+              created: 1756197444422
+              modified: 1756198400602
+              isPrivate: false
+              description: ""
+              sortKey: -1756197463360
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"title": "string"
+                }
+            headers:
+              - name: Content-Type
+                disabled: false
+                value: application/json
+            authentication:
+              type: bearer
+              token: "1234"
+              prefix: Bearer
+            scripts:
+              preRequest: ""
+              afterResponse: |-
+                insomnia.test('Check if status is 201', () => {
+                    insomnia.expect(insomnia.response.code).to.eql(201);
+                		
+                		const todoObj = insomnia.response.json();
+                		const myFolder = insomnia.parentFolders.get('获取详情case');
+                		if (myFolder == undefined) {
+                			throw Error('myFolder not found');
+                		}
+                		myFolder.environment.set('todoId', todoObj.id);
+                });
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+        environment:
+          todoId: 1
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1756113856515
+    modified: 1756199439891
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1756113856443
+    modified: 1756199439894
+    isPrivate: false
+  data:
+    base_url: "{{ _.scheme }}://{{ _.host }}{{ _.base_path }}"
+  subEnvironments:
+    - name: OpenAPI env 127.0.0.1:3001
+      meta:
+        id: env_c573b043a91d4d3a97b32acf5bd0ce86
+        created: 1756196696778
+        modified: 1756196696778
+        isPrivate: false
+        sortKey: 1756196696778
+      data:
+        scheme: http
+        base_path: ""
+        host: 127.0.0.1:3001
+        bearerToken: bearerToken
+    - name: OpenAPI env test.server.test
+      meta:
+        id: env_1921823293644724b7c862af1690d123
+        created: 1756196696780
+        modified: 1756196696780
+        isPrivate: false
+        sortKey: 1756196696780
+      data:
+        scheme: https
+        base_path: /v1
+        host: test.server.test
+        bearerToken: bearerToken
+    - name: OpenAPI env uat.server.test
+      meta:
+        id: env_22680e0962b7477ca823a3a085dec090
+        created: 1756196696781
+        modified: 1756196696781
+        isPrivate: false
+        sortKey: 1756196696781
+      data:
+        scheme: https
+        base_path: /v1
+        host: uat.server.test
+        bearerToken: bearerToken
+    - name: OpenAPI env prod.server.test
+      meta:
+        id: env_158b82b451b44ddda70a9f84b8d15181
+        created: 1756196696783
+        modified: 1756196696783
+        isPrivate: false
+        sortKey: 1756196696783
+      data:
+        scheme: https
+        base_path: /v1
+        host: prod.server.test
+        bearerToken: bearerToken
+    - name: TODO
+      meta:
+        id: env_8a1f2c780d26492190b271661e47b095
+        created: 1756196833317
+        modified: 1756199439892
+        isPrivate: false
+        sortKey: 1756196833317
+      data:
+        base_url: http://127.0.0.1:3001
